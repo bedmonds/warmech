@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+# Print a list of active races to STDOUT.
+#
+# If you supply a game abbreviation as argument to this program,
+# the results will be limited to that game.
+#
+# Of course, you're free to pipe the results into grep to filter 
+# results however else you want.
+#
+# e.g. `current-races | grep Zelda | grep open` will output the
+# 16 LTTP randomizer runs going on, and a few other Zelda games.
+
+require 'srl'
+
+if ARGV.include?('--help') || ARGV.include?('-h')
+  puts 'Usage: current-races [<game_abbrev>]'
+  puts "\nReturns a list of races that are currently active.\n\n"
+  puts "You may limit the results to a single game by providing \n" \
+       "the game's abbreviation as an argument."
+  puts "\nResults are output one per line, with their name, IRC channel,\n" \
+       "and race status being tab delimeted."
+  puts "\nEXIT CODES"
+  puts "\t3\tUnknown application error. This is most certainly a bug."
+  puts "\t4\tNetwork error. Unable to reach speedrunslive.com \n" \
+       "\t\tor the query was malformed."
+  exit 0
+end
+
+begin
+  races = SRL.current_races
+  races.delete_if { |i| i.game.abbreviation != ARGV[0] } unless ARGV.empty?
+  puts races.map { |r|
+    "#{r.game.name}\t#srl-#{r.channel}\t#{r.status}\t#{r.goal}"
+  }.join("\n")
+rescue SRL::NetworkError
+  puts 'Could not query SpeedRunsLive.com'
+  exit 4
+rescue StandardError => e
+  puts 'An unknown error occured.'
+  puts e.message
+  exit 3
+end

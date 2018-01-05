@@ -1,0 +1,12 @@
+auth.json
+db/
+
+# Usual Suspects
+node_modules/
+build/
+
+npm-debug.log
+
+*.swp
+.DS_Store
+Thumbs.db

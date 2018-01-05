@@ -1,0 +1,37 @@
+{
+  "name": "ffr-racebot",
+  "version": "0.1.0",
+  "description": "Discord Bot for the Final Fantasy Randomizer community, announcing races to channel and subscribed members.",
+  "main": "src/index.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bedmonds/ffr-racebot.git"
+  },
+  "keywords": [
+    "final-fantasy-randomizer",
+    "ffr",
+    "srl",
+    "speedrunslive"
+  ],
+  "author": "Brian Edmonds (Artea)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bedmonds/ffr-racebot/issues"
+  },
+  "homepage": "https://github.com/bedmonds/ffr-racebot#readme",
+  "dependencies": {
+    "app-root-path": "^2.0.1",
+    "discord.js": "^11.2.1",
+    "nedb": "^1.8.0",
+    "typescript": "^2.6.2"
+  },
+  "devDependencies": {
+    "@types/nedb": "^1.8.5",
+    "@types/node": "^8.5.5"
+  }
+}
