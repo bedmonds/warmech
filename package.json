@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register t/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@types/nedb": "^1.8.5",
-    "@types/node": "^8.5.5"
+    "@types/node": "^8.5.5",
+    "mocha": "^4.1.0",
+    "ts-node": "^4.1.0"
   }
 }

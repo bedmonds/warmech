@@ -1,8 +1,9 @@
-.PHONY: build clean deps run
+.PHONY: build clean deps run test
 default: build 
 
 deps:
 	gem install srl-api
+	npm install
 
 build:
 	npm run build
@@ -12,3 +13,6 @@ run: build
 
 clean:
 	rm -f build/*
+
+test:
+	npm run test
