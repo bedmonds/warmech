@@ -80,6 +80,10 @@ export class WarMECH {
 	// [TODO] Make proper commands instead of this switch monstrosity.
 	onMessageReceived(msg: Message) {
 		if (msg.author.username == 'WarMECH') return;
+		if (msg.content.includes(`<@${this.botUserId}>`)) {
+			castNuclear(msg);
+			return;
+		}
 
 		let args = msg.content.substring(1).split(' ');
 		let cmd = args[0];
@@ -191,4 +195,9 @@ Upcoming races for ${(new Date()).toDateString()}
 
 ${tmp.join("\n")}
 \`\`\``);
+}
+
+
+function castNuclear(target: IStream) {
+	target.reply(`**NUCLEAR ${Math.floor((Math.random() * 160) + 160)} damage**`);
 }
