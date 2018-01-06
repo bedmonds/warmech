@@ -5,12 +5,12 @@
 //
 // Due to the nature of SRL, some of these tests will fail if you are not
 // connected to the internet, and may sometimes time out.
-import * as races from '../src/warmech/races';
 import 'mocha';
 import * as assert from 'assert';
 import * as root from 'app-root-path';
-
 import { execFile } from 'child_process';
+
+import * as races from '../src/warmech/races';
 
 
 const dummyRaces = `Final Fantasy Hacks\t#srl-yojoe\topen\tKill Chaos
@@ -20,7 +20,8 @@ Mega Man X\t#srl-calebhart\tcomplete\tany%
 
 `;
 
-describe('races module', function() {
+
+describe('race listing', function() {
 	it('should return a list', function(done) {
 		// SRL had a tendancy to take longer than 2 seconds
 		// every once in a while.
@@ -41,6 +42,21 @@ describe('races module', function() {
 		assert.equal('Final Fantasy Hacks', list[0].game);
 		assert.equal('complete', list[2].state);
 
+		done();
+	});
+});
+
+
+describe('race history', function() {
+	it('should remove stale races', function(done) {
+		// [TODO] Implement me
+		assert.ifError(new Error('NYI'));
+		done();
+	});
+
+	it('should update existing race goals', function(done) {
+		// [TODO] Implement me
+		assert.ifError(new Error('NYI'));
 		done();
 	});
 });

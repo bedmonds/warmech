@@ -1,7 +1,7 @@
 import Datastore = require('nedb');
 const root = require('app-root-path');
 
-import { IStream } from './warmech';
+import { IStream, IRepo } from './warmech';
 
 
 type MaybeSub = Subscription | null;
@@ -26,8 +26,10 @@ const $db = new Datastore({
 });
 
 
-export function register(member: ISubscriber, os: IStream) {
-	$db.findOne({ 'user.id': member.id }, (err: Error, doc?: Subscription) => {
+export function register(member: ISubscriber, os: IStream, repo?: IRepo) {
+	let db = repo || $db;
+
+	db.findOne({ 'user.id': member.id }, (err: Error, doc?: Subscription) => {
 		if (doc) {
 			console.log(doc);
 			os.reply("I am not messaging you twice every race, mate.");
@@ -40,21 +42,23 @@ export function register(member: ISubscriber, os: IStream) {
 			null 
 		);
 
-		$db.insert(sub, onRegistration.bind(os));
+		db.insert(sub, onRegistration.bind(os));
 	})
 }
 
 
-export function withdraw(member: ISubscriber, os: IStream) {
+export function withdraw(member: ISubscriber, os: IStream, repo?: IRepo) {
+	let db = repo || $db;
+
 	let q = { 'user.id': member.id };
 
-	$db.findOne(q, (err: Error, doc: MaybeSub) => {
+	db.findOne(q, (err: Error, doc: MaybeSub) => {
 		if (!doc) {
 			os.reply("You don't have an active subscription, bozo.");
 			return;
 		}
 
-		$db.remove(q, onWithdrawl.bind(os));
+		db.remove(q, onWithdrawl.bind(os));
 	});
 }
 

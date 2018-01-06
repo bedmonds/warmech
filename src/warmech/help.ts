@@ -6,6 +6,7 @@ For individual command help and detailed description, use !help <command>
 Public Commands
 
 flags        print the flag string for commonly run settings
+schedule     print upcoming league races
 help         print general usage information, or details on a specific command
 \`\`\``;
 /*

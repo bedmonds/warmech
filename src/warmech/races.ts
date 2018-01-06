@@ -3,6 +3,8 @@ import * as root from 'app-root-path';
 
 import Datastore = require('nedb');
 
+import { IRepo } from './warmech';
+
 
 type RaceState = 'open' | 'in_progress' | 'complete' | 'unknown';
 
@@ -29,30 +31,31 @@ const $db = new Datastore({
 // This whole chain is criminally inefficient, but
 // we're not dealing with large datasets and it's my
 // fucking hardware running it.
-export function refresh() {
-	removeOldRaces();
-	list(function(err, races) {
-		if (err) throw err;
+export function refresh(db: IRepo) {
+	db = db || $db;
 
-		for(let i of races) createOrUpdate(i);
+	removeOldRaces(db);
+	list(function(err, races) {
+		if (err || races == undefined) throw err;
+
+		for(let i of races) createOrUpdate(db, i);
 	});
 }
 
 
-function createOrUpdate(race: Race) {
-	console.log(race);
+function createOrUpdate(db: IRepo, race: Race) {
+	db.find({ 'room': race.room }, function(err, doc) {
+		throw new Error('NYI');
+	});
 };
-
-export var _createOrUpdate = createOrUpdate;
-
 
 
 // Remove any stored race data older than 24 hours.
 //
 // If a Speed Run takes more than 24 hours, there's something wrong.
-function removeOldRaces() {
+function removeOldRaces(db: IRepo) {
 	let q = { 'discovered_at': {
-		$lt: (new Date() - 24 * 3600 * 1000) 
+		$lt: (new Date(Date.now() - 24 * 3600 * 1000))
 	}};
 
 	db.remove(q, function(err, data) {
@@ -68,7 +71,7 @@ function parse(data: string) {
 	let races: Race[] = data.trim().split("\n").map(function(i) {
 		var args = i.split("\t"); 
 		return new Race(
-			args[0], args[1], args[2], args[3], new Date()
+			args[0], args[1], <RaceState>args[2], args[3], new Date()
 		);
 	});
 
@@ -76,15 +79,15 @@ function parse(data: string) {
 }
 
 
-function list(cb: (err: Error, races: Race[]) => void) {
+function list(cb: (err: Error | null, races: Race[] | undefined) => void) {
 	let ls = execFile(`${root}/bin/fetch-races`, ['ffhacks']);
 	
 	ls.stdout.on('data', function(data) {
-		cb(null, parse(data));
+		cb(null, parse(data.toString()));
 	});
 
 	ls.stderr.on('data', function(data) {
-		cb(data, undefined);
+		cb(new Error(data.toString()), undefined);
 	});
 }
 

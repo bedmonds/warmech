@@ -8,6 +8,9 @@ import * as subscriptions from './subscriptions';
 import * as flags from './flags';
 import * as races from './races';
 
+import { Match } from './league';
+import * as league from './league';
+
 
 const Channels = {
 	ArtcordTest: '398576343295459341'
@@ -15,7 +18,14 @@ const Channels = {
 
 
 export interface IStream {
-	reply: (string) => void;
+	reply(string);
+}
+
+export interface IRepo {
+	findOne(query: Object, cb: (Error, any) => void);
+	find(query: Object, cb: (Error, any) => void);
+	remove(query: Object, cb: (Error, any) => void);
+	insert(query: Object, cb: (Error, any) => void);
 }
 
 
@@ -66,6 +76,8 @@ export class WarMECH {
 
 	// Parse direct messages received by the client and funnel them
 	// to the appropriate command.
+	//
+	// [TODO] Make proper commands instead of this switch monstrosity.
 	onMessageReceived(msg: Message) {
 		if (msg.author.username == 'WarMECH') return;
 
@@ -82,7 +94,12 @@ export class WarMECH {
 			break;
 
 		case 'races':
-			races.list(msg);
+			// [TODO] Get current races
+			break;
+
+		case 'schedule':
+			league.upcomingRaces(sendSchedule.bind(msg));
+			break;
 
 		case 'sub':
 		case 'subscribe':
@@ -115,6 +132,8 @@ ${flagset.goal}
 
 	//
 	// RaceBot Commands
+	//
+	// [TODO] Move to proper commands instead of this lulzworthy shite.
 	//
 	private SendHelp(os: IStream, args: string[]) {
 		if (args.length == 0) {
@@ -153,4 +172,23 @@ ${flagset.goal}
 
 		channel.send(msg);
 	}
+
+
+	private send
+}
+
+
+function sendSchedule(this: IStream, err: Error, matches?: Match[]) {
+	if (err || !matches) {
+		this.reply("I'm broken, esse. Sorry!");
+		return;
+	}
+
+	let tmp = matches.map(function(i) { return i.toString(); });
+
+	this.reply(`\`\`\`
+Upcoming races for ${(new Date()).toDateString()}
+
+${tmp.join("\n")}
+\`\`\``);
 }
