@@ -1,7 +1,7 @@
 import Datastore = require('nedb');
 const root = require('app-root-path');
 
-import { IStream, IRepo } from './warmech';
+import { IStream, IRepo } from './common';
 
 
 type MaybeSub = Subscription | null;

@@ -8,6 +8,9 @@ import * as subscriptions from './subscriptions';
 import * as flags from './flags';
 import * as races from './races';
 
+
+import { IStream } from './common';
+
 import { Match } from './league';
 import * as league from './league';
 
@@ -17,16 +20,6 @@ const Channels = {
 }
 
 
-export interface IStream {
-	reply(string);
-}
-
-export interface IRepo {
-	findOne(query: Object, cb: (Error, any) => void);
-	find(query: Object, cb: (Error, any) => void);
-	remove(query: Object, cb: (Error, any) => void);
-	insert(query: Object, cb: (Error, any) => void);
-}
 
 
 export class WarMECH {
@@ -85,6 +78,8 @@ export class WarMECH {
 			return;
 		}
 
+		if (!msg.content.startsWith('!')) return;
+
 		let args = msg.content.substring(1).split(' ');
 		let cmd = args[0];
 
@@ -116,8 +111,7 @@ export class WarMECH {
 			break;
 
 		case 'flags':
-			let flagset : IFlagset | undefined  = 
-				flags.forLabel(args[0]);
+			let flagset = flags.forLabel(args[0]);
 
 			if (!flagset) {
 				this.SendHelp(msg, ['flags']);

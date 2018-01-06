@@ -3,7 +3,7 @@ import * as root from 'app-root-path';
 
 import Datastore = require('nedb');
 
-import { IRepo } from './warmech';
+import { IRepo } from './common';
 
 
 type RaceState = 'open' | 'in_progress' | 'complete' | 'unknown';
